@@ -12,8 +12,8 @@ library(DT)
 # library(EVI)
 library(ggplot2)
 
-load("EVI_Global")
-load("cEVI_Global")
+#load("EVI_Global")
+#load("cEVI_Global")
 #load("cEVI_Africa")
 
 ui <- dashboardPage(
