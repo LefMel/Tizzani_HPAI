@@ -31,7 +31,7 @@ ui <- dashboardPage(
     
     sidebarMenu(id ="tabs",
       menuItem("Time Period", tabName = "Time_Period", icon = icon("bar-chart")),
-              dateRangeInput("rdates_Global", "Range of dates for Avian influenza outbreaks:", start =nth( as.Date(EVI_Global$Days, origin="1970-01-01"), n =-365), end = max(as.Date(EVI_Global$Days, origin="1970-01-01"))), # input$rdates_Global
+              dateRangeInput("rdates_Global", "Range of dates for Avian influenza outbreaks:", start =as.Date(EVI_Global$Days, origin="1970-01-01")[nrow(EVI_Global)-365], end = max(as.Date(EVI_Global$Days, origin="1970-01-01"))), # input$rdates_Global
               
               
       
