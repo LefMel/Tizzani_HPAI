@@ -92,7 +92,7 @@ ui <- dashboardPage(
                  box(plotOutput("boxGlobal1"))#,
                  #box(plotOutput("boxGlobal2"))
                )
-      ),
+      )
 
   
 
