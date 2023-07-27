@@ -428,32 +428,38 @@ evi.graphs(EVI_Global)
 load("EVI_Global")
 
 
-#cEVI_Global = deviant(as.numeric(data$Global[which(data$Global!="")]), r_a = 7, origin="2004/12/31", past = 365, method = "cEVI")
-#save(cEVI_Global, file="cEVI_Global")
+cEVI_Global = deviant(as.numeric(data$Global[which(data$Global!="")]), r_a = 7, origin="2004/12/31", past = 365, method = "cEVI")
+save(cEVI_Global, file="cEVI_Global")
 
+#####
 
 EVI_Africa = deviant(as.numeric(data$Africa[which(data$Africa!="")]), r_a = 30, lag_max = 15, origin="2004/12/31", past = 365, method = "EVI")
 save(EVI_Africa, file="EVI_Africa")
 
-#cEVI_Africa = deviant(as.numeric(data$Africa[which(data$Africa!="")]),  r_a = 30, lag_max = 15, origin="2004/12/31", past = 365, method = "cEVI")
-#save(cEVI_Africa, file="cEVI_Africa")
+cEVI_Africa = deviant(as.numeric(data$Africa[which(data$Africa!="")]),  r_a = 30, lag_max = 15, origin="2004/12/31", past = 365, method = "cEVI")
+save(cEVI_Africa, file="cEVI_Africa")
 
+#####
 
 EVI_America = deviant(as.numeric(data$America[which(data$America!="")]),  r_a = 30, lag_max = 15, origin="2004/12/31", past = 365, method = "EVI")
 save(EVI_America, file="EVI_America")
 
-#cEVI_America = deviant(as.numeric(data$America[which(data$America!="")]),  r_a = 30, lag_max = 15, origin="2004/12/31", past = 365, method = "cEVI")
-#save(cEVI_America, file="cEVI_America")
+cEVI_America = deviant(as.numeric(data$America[which(data$America!="")]),  r_a = 30, lag_max = 15, origin="2004/12/31", past = 365, method = "cEVI")
+save(cEVI_America, file="cEVI_America")
 
-
+#####
 EVI_Asia_Pacific = deviant(as.numeric(data$Asia_Pacific[which(data$Asia_Pacific!="")]),  r_a = 30, lag_max = 15, origin="2004/12/31", past = 365, method = "EVI")
 save(EVI_Asia_Pacific, file="EVI_Asia_Pacific")
 
+cEVI_Asia_Pacific = deviant(as.numeric(data$Asia_Pacific[which(data$Asia_Pacific!="")]),  r_a = 30, lag_max = 15, origin="2004/12/31", past = 365, method = "cEVI")
+save(cEVI_Asia_Pacific, file="cEVI_Asia_Pacific")
 
+#####
+EVI_Europe = deviant(as.numeric(data$Europe[which(data$Europe!="")]),  r_a = 30, lag_max = 15, origin="2004/12/31", past = 365, method = "EVI")
+save(EVI_Europe, file="EVI_Europe")
 
-
-
-
+cEVI_Europe = deviant(as.numeric(data$Europe[which(data$Europe!="")]),  r_a = 30, lag_max = 15, origin="2004/12/31", past = 365, method = "cEVI")
+save(cEVI_Europe, file="cEVI_Europe")
 
 
 
