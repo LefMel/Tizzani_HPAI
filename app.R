@@ -141,6 +141,7 @@ ui <- dashboardPage(
 
 server <- function(input, output) {
   
+  pdf(NULL)
   data <- reactive({
     switch(input$region,
            "Global" = list(dataset1 = EVI_Global, dataset2 = cEVI_Global),
@@ -230,7 +231,6 @@ server <- function(input, output) {
       par(mfrow=c(1,1))
       LL=ifelse(identical(which(as.Date(data()$dataset1$Days, origin="1970-01-01")==input$rdates_Global[1]),integer(0)), yes = which(as.Date(data()$dataset1$Days, origin="1970-01-01")==(as.Date(input$rdates_Global[1]+1))), no = which(as.Date(data()$dataset1$Days, origin="1970-01-01")==input$rdates_Global[1])) 
       UL=ifelse(identical(which(as.Date(data()$dataset1$Days, origin="1970-01-01")==input$rdates_Global[2]),integer(0)), yes = which(as.Date(data()$dataset1$Days, origin="1970-01-01")==(as.Date(input$rdates_Global[2]-1))), no = which(as.Date(data()$dataset1$Days, origin="1970-01-01")==input$rdates_Global[2])) 
-      pdf(file = NULL)
       evirlap(Index1 = data()$dataset1[LL:UL,], Index2 = data()$dataset2[LL:UL,],size.index = input$sizeindex,
               Index1.lab = "EVI", Index2.lab = "cEVI", Index3.lab = "cEVI-", ln = ifelse(test=input$rlog, T , F), Index.country = "HPAI", type = ifelse(test = input$rlines,"l","p"))
       
