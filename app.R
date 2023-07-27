@@ -71,7 +71,8 @@ ui <- dashboardPage(
               onLabel = "EVI", offLabel = "cEVI", value = TRUE,
               width = "100%"
             )
-        )
+        ),
+        selectInput("region", "Choose a Region:", choices = c("Global", "America", "Africa", "Asia - Pacific", "Europe"), selected = "Global")
         )
         ),
       tabPanel(
@@ -116,8 +117,8 @@ ui <- dashboardPage(
       h6("Positive predictive value (PPV) for the days that an early warning was issued. Higher color intensity corresponds to PPV closer to the value of 1."),
       h6("Negative predictive values (NPV) for the days that an early warning was not issued. Higher color intensity corresponds to NPV closer to the value of 1.")
     )
-  ),
-  selectInput("region", "Choose a Region:", choices = c("Global", "America", "Africa", "Asia - Pacific", "Europe"), selected = "Global")
+  )#,
+  #selectInput("region", "Choose a Region:", choices = c("Global", "America", "Africa", "Asia - Pacific", "Europe"), selected = "Global")
   
   ),
   
