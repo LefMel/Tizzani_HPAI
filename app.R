@@ -117,15 +117,19 @@ ui <- dashboardPage(
       h6("Positive predictive value (PPV) for the days that an early warning was issued. Higher color intensity corresponds to PPV closer to the value of 1."),
       h6("Negative predictive values (NPV) for the days that an early warning was not issued. Higher color intensity corresponds to NPV closer to the value of 1.")
     )
-  )
+  ),
+  selectInput("region", "Choose a Region:", choices = c("Global", "America", "Africa", "Asia - Pacific", "Europe"), selected = "Global")
+  
   ),
   
   
   dashboardBody(
     tabPanel(h5("Avian Influenza"),
              fluidRow(
-               plotlyOutput("boxGlobal1", width = "100%"),
-               dataTableOutput("EVI_cEVI_Global")
+               #plotlyOutput("boxGlobal1", width = "100%"),
+               plotlyOutput("box1", width = "100%"),
+               #dataTableOutput("EVI_cEVI_Global")
+               dataTableOutput("EVI_cEVI")
              )
     )
   )
@@ -137,6 +141,14 @@ ui <- dashboardPage(
 
 server <- function(input, output) {
   
+  data <- reactive({
+    switch(input$region,
+           "Global" = list(dataset1 = EVI_Global, dataset2 = cEVI_Global),
+           "Africa" = list(dataset1 = EVI_Africa, dataset2 = cEVI_Africa),
+           "Asia - Pacific" = list(dataset1 = EVI_Asia_Pacific, dataset2 = cEVI_Asia_Pacific),
+           "Europe" = list(dataset1 = EVI_Europe, dataset2 = cEVI_Europe),
+           "America" = list(dataset1 = EVI_America, dataset2 = cEVI_America))
+  })  
   evirlap <- function(Index1,Index2, ln=T, type="p",size.index=1,
                       Index1.lab="EVI1",Index2.lab="EVI2",Index3.lab="EVI-",Index.country=NULL, origin="1970-01-01") {
     
@@ -194,15 +206,16 @@ server <- function(input, output) {
     print(sp3)
     
   }
-  output$boxGlobal1 <- renderPlotly({
-    options()
-    par(mfrow=c(1,1))
-    LL=ifelse(identical(which(as.Date(EVI_Global$Days, origin="1970-01-01")==input$rdates_Global[1]),integer(0)), yes = which(as.Date(EVI_Global$Days, origin="1970-01-01")==(as.Date(input$rdates_Global[1]+1))), no = which(as.Date(EVI_Global$Days, origin="1970-01-01")==input$rdates_Global[1])) 
-    UL=ifelse(identical(which(as.Date(EVI_Global$Days, origin="1970-01-01")==input$rdates_Global[2]),integer(0)), yes = which(as.Date(EVI_Global$Days, origin="1970-01-01")==(as.Date(input$rdates_Global[2]-1))), no = which(as.Date(EVI_Global$Days, origin="1970-01-01")==input$rdates_Global[2])) 
-    evirlap(Index1 = EVI_Global[LL:UL,], Index2 = cEVI_Global[LL:UL,],size.index = input$sizeindex,
-            Index1.lab = "EVI", Index2.lab = "cEVI", Index3.lab = "cEVI-", ln = ifelse(test=input$rlog, T , F), Index.country = "HPAI", type = ifelse(test = input$rlines,"l","p"))
+
+#    output$boxGlobal1 <- renderPlotly({
+#    options()
+#    par(mfrow=c(1,1))
+#    LL=ifelse(identical(which(as.Date(EVI_Global$Days, origin="1970-01-01")==input$rdates_Global[1]),integer(0)), yes = which(as.Date(EVI_Global$Days, origin="1970-01-01")==(as.Date(input$rdates_Global[1]+1))), no = which(as.Date(EVI_Global$Days, origin="1970-01-01")==input$rdates_Global[1])) 
+#    UL=ifelse(identical(which(as.Date(EVI_Global$Days, origin="1970-01-01")==input$rdates_Global[2]),integer(0)), yes = which(as.Date(EVI_Global$Days, origin="1970-01-01")==(as.Date(input$rdates_Global[2]-1))), no = which(as.Date(EVI_Global$Days, origin="1970-01-01")==input$rdates_Global[2])) 
+#    evirlap(Index1 = EVI_Global[LL:UL,], Index2 = cEVI_Global[LL:UL,],size.index = input$sizeindex,
+#            Index1.lab = "EVI", Index2.lab = "cEVI", Index3.lab = "cEVI-", ln = ifelse(test=input$rlog, T , F), Index.country = "HPAI", type = ifelse(test = input$rlines,"l","p"))
     
-  })
+#  })
   
   #  output$boxGlobal2 <- renderPlot({
   #    LL=ifelse(identical(which(as.Date(EVI_Global$Days, origin="1970-01-01")==input$rdates_Global[1]),integer(0)), yes = which(as.Date(EVI_Global$Days, origin="1970-01-01")==(as.Date(input$rdates_Global[1]+1))), no = which(as.Date(EVI_Global$Days, origin="1970-01-01")==input$rdates_Global[1])) 
@@ -211,14 +224,28 @@ server <- function(input, output) {
   #            Index1.lab = "EVI", Index2.lab = "cEVI", Index3.lab = "EVI-", ln = T, Index.country = "HPAI", type = ifelse(test = input$rlines,"l","p"))
   #  })
   
-  EVI_cEVI_Global<-renderUI({
+
+    output$box1 <- renderPlotly({
+      options()
+      par(mfrow=c(1,1))
+      LL=ifelse(identical(which(as.Date(data()$dataset1$Days, origin="1970-01-01")==input$rdates_Global[1]),integer(0)), yes = which(as.Date(data()$dataset1$Days, origin="1970-01-01")==(as.Date(input$rdates_Global[1]+1))), no = which(as.Date(data()$dataset1$Days, origin="1970-01-01")==input$rdates_Global[1])) 
+      UL=ifelse(identical(which(as.Date(data()$dataset1$Days, origin="1970-01-01")==input$rdates_Global[2]),integer(0)), yes = which(as.Date(data()$dataset1$Days, origin="1970-01-01")==(as.Date(input$rdates_Global[2]-1))), no = which(as.Date(data()$dataset1$Days, origin="1970-01-01")==input$rdates_Global[2])) 
+      pdf(file = NULL)
+      evirlap(Index1 = data()$dataset1[LL:UL,], Index2 = data()$dataset2[LL:UL,],size.index = input$sizeindex,
+              Index1.lab = "EVI", Index2.lab = "cEVI", Index3.lab = "cEVI-", ln = ifelse(test=input$rlog, T , F), Index.country = "HPAI", type = ifelse(test = input$rlines,"l","p"))
+      
+    })
+  
+  EVI_cEVI<-renderUI({
 
   }) 
   
-  output$EVI_cEVI_Global <- DT::renderDataTable({
+  
+  
+  output$EVI_cEVI <- DT::renderDataTable({
     
-    if(input$evi_cevi==TRUE) {out<-EVI_Global}
-    if(input$evi_cevi==FALSE) {out<-cEVI_Global;names(out)[2]<-"cEVI"}
+    if(input$evi_cevi==TRUE) {out<-data()$dataset1}
+    if(input$evi_cevi==FALSE) {out<-data()$datase2;names(out)[2]<-"cEVI"}
     #out<-EVI_Global
     datatable(
       out,
