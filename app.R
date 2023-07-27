@@ -6,11 +6,12 @@
 
 library(shiny)    
 library(shinydashboard)
-library(shinyWidgets)
 library(plotly)
 library(DT)
 # library(EVI)
 library(ggplot2)
+library(shinyWidgets)
+
 
 #load("EVI_Global")
 #load("cEVI_Global")
