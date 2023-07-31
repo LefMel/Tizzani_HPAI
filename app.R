@@ -245,7 +245,7 @@ server <- function(input, output) {
   output$EVI_cEVI <- DT::renderDataTable({
     
     if(input$evi_cevi==TRUE) {out<-data()$dataset1}
-    if(input$evi_cevi==FALSE) {out<-data()$datase2;names(out)[2]<-"cEVI"}
+    if(input$evi_cevi==FALSE) {out<-data()$dataset2;names(out)[2]<-"cEVI"}
     #out<-EVI_Global
     datatable(
       out,
