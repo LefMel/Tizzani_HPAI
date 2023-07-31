@@ -108,12 +108,10 @@ ui <- dashboardPage(
       "Info",
       icon = icon("info"),
       h4("Figures Explained"),
-      h5("Upper left:"),
-      h6("Observations (updated daily), presented on the original scale, with red dots corresponding to dates that, according to EVI, an early warning was issued."),
-      h5("Upper right:"),
-      h6("Observations (updated daily), presented on the logarithmic scale, which facilitates the comparison of the steepness of the epidemic curve between the different waves."),
+      h6("Observations (updated daily), Logarithmic scale(unselected), presented on the original scale, with red dots corresponding to dates that, according to EVI, an early warning was issued."),
+      h6("Observations (updated daily), Logarithmic scale(selected), presented on the logarithmic scale, which facilitates the comparison of the steepness of the epidemic curve between the different waves."),
       hr(),
-      h5("Model Predictive value"),
+      h5("Model Predictive value (Not available yet"),
       h6("Positive predictive value (PPV) for the days that an early warning was issued. Higher color intensity corresponds to PPV closer to the value of 1."),
       h6("Negative predictive values (NPV) for the days that an early warning was not issued. Higher color intensity corresponds to NPV closer to the value of 1.")
     )
