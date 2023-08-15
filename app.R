@@ -45,11 +45,11 @@ ui <- dashboardPage(
             "Plot Features",
             tabName = "dashboard",
             icon = icon("line-chart"),
-            checkboxInput(
-              "rlines",
-              "Draw lines instead of points (EVI plots)",
-              value = FALSE
-            ), # input$rlines==FALSE
+        #    checkboxInput( # This feature is not compatible with plotly. 
+        #      "rlines",    # Discuss to keep it only with ggplot basic.
+        #      "Draw lines instead of points (EVI plots)",
+        #      value = FALSE
+        #    ), # input$rlines==FALSE
             checkboxInput("rlog", "Logarithmic scale", value = FALSE)
             # numericInput("rsize", "Size of points", value = 1.5) # input$rsize
           ),
@@ -97,7 +97,7 @@ ui <- dashboardPage(
                "R-package Info"
              )
     ),
-    helpText(tags$b(""), "Pateras K., et al. The convergence epidemic index (cEVI) an early warning tool for identifying waves in an epidemic.",
+    helpText(tags$b(""), "Pateras K., Meletis et al. The convergence epidemic index (cEVI) an early warning tool for identifying waves in an epidemic.",
              tags$a(
                href = "https://www.sciencedirect.com/science/article/pii/S2468042723000349",
                "Read it here"
@@ -107,13 +107,21 @@ ui <- dashboardPage(
     tabPanel(
       "Info",
       icon = icon("info"),
-      h4("Figures Explained"),
+      h4("Figures Explained [Fix fonts and make readable]"),
       h6("Observations (updated daily), Logarithmic scale(unselected), presented on the original scale, with red dots corresponding to dates that, according to EVI, an early warning was issued."),
       h6("Observations (updated daily), Logarithmic scale(selected), presented on the logarithmic scale, which facilitates the comparison of the steepness of the epidemic curve between the different waves."),
       hr(),
-      h5("Model Predictive value (Not available yet"),
+      h4("Table variables explained"),
+      h6("Days: The serial number for each time point."),
+      h6("EVI/cEVI: The estimated EVI/cEVI for each time point, cEVI takes values 0/1."),
+      h6("Outbreaks: The rolling average of the newly observed Outbreaks for each time point. A 7-day rolling average is calculated by default (i.e., r_a=7). The user will be given the option to change this [~Next update~]"),
+      h6("Index: Takes values 1 or 0 for the issuance of an early warning or not, respectively"),
+      hr(),
+      h5("Model Predictive value [~Next update~]"),
       h6("Positive predictive value (PPV) for the days that an early warning was issued. Higher color intensity corresponds to PPV closer to the value of 1."),
-      h6("Negative predictive values (NPV) for the days that an early warning was not issued. Higher color intensity corresponds to NPV closer to the value of 1.")
+      h6("Negative predictive values (NPV) for the days that an early warning was not issued. Higher color intensity corresponds to NPV closer to the value of 1."),
+      h6("lag_max:  Restriction of the maximum window size for the rolling window size. The default is set to one month (lag_max=30) to prevent excess volatility of past epidemic waves from affecting the most recent volatility estimates.  The user could be given the option to change this [~Next update~]"),
+      h6("past: Restriction on the historical data that EVI/cEVI will use. This is set to 365 (default) to account for a year and aid running times. The user could be given the option to change this [~Next update~]")
     )
   )#,
   #selectInput("region", "Choose a Region:", choices = c("Global", "America", "Africa", "Asia - Pacific", "Europe"), selected = "Global")
@@ -171,36 +179,39 @@ server <- function(input, output) {
     Index$variable<-"x"
     Index$Index[is.na(Index$Index)]<-0
     Index$Index<-factor(Index$Index,labels = c("No warning",paste(Index1.lab,"alone"),paste(Index2.lab,"alone"), Index3.lab))
+    Index$Outbreaks<-Index$Cases
     if (ln==F) {
       sp3<-ggplot(Index, aes_string(x="Days",group="variable"))+
         list(
-          geom_point(aes_string(y=("Cases"), color="Index"), size=size.index),
+          geom_point(aes_string(y=("Outbreaks"), color="Index"), size=size.index),
           #scale_color_manual(values=c("grey69", "yellow3", "orange3", "red4")),
           scale_colour_grey(start = 1,end = 0),
           scale_color_manual(values=c("grey69", "yellow3", "orange3", "red4")),
-          labs(title = paste0("Graph combining outputs ",Index1.lab,", ", Index2.lab," and ", Index3.lab," - ",Index.country), y = "Cases", x="Days"),
+          labs(title = paste0("HPAI- (c)EVI"), y = "Outbreaks", x="Days"),
+          #          labs(title = paste0("Graph combining outputs ",Index1.lab,", ", Index2.lab," and ", Index3.lab," - ",Index.country), y = "Outbreaks", x="Days"),
           theme(legend.position = "bottom",
                 legend.title = element_blank(),
                 legend.text = element_text(size=8),
                 legend.key.height = unit(0, 'cm')),
-          if (type=="l")  geom_path(aes_string(y="Cases",colour="Index"),size=size.index)
+          if (type=="l")  geom_path(aes_string(y="Outbreaks",colour="Index"),size=size.index)
         )
     }
     
     if (ln==T) {
       sp3<-ggplot(Index, aes_string(x="Days",group="variable"))+
         list(
-          geom_point(aes_string(y="log(Cases)", color="Index"), size=size.index),
+          geom_point(aes_string(y="log(Outbreaks)", color="Index"), size=size.index),
           #scale_color_manual(values=c("grey69", "yellow3", "orange3", "red4")),
           scale_colour_grey(start = 1,end = 0),
           scale_color_manual(values=c("grey69", "yellow3", "orange3", "red4")),
-          labs(title = paste0("Graph combining outputs ",Index1.lab,", ", Index2.lab," and ", Index3.lab," - ",Index.country), y = "log(Cases)", x="Days"),
+          labs(title = paste0("HPAI- (c)EVI"), y = "Outbreaks", x="Days"),
+          #          labs(title = paste0("Graph combining outputs ",Index1.lab,", ", Index2.lab," and ", Index3.lab," - ",Index.country), y = "log(Outbreaks)", x="Days"),
           theme(legend.position = "bottom",
                 legend.title = element_blank(),
                 legend.text = element_text(size=8),
-                legend.key.height = unit(0, 'cm')),
-          if (type=="l")  geom_path(aes_string(y="log(Cases)",colour="Index"), size=size.index)
+                legend.key.height = unit(0, 'cm'))
         )
+          if (type=="l"){ geom_path(aes_string(y="log(Outbreaks)",colour="Index"), size=size.index) }
     }
     print(sp3)
     
@@ -226,11 +237,12 @@ server <- function(input, output) {
 
     output$box1 <- renderPlotly({
       options()
+      rlines=FALSE
       par(mfrow=c(1,1))
       LL=ifelse(identical(which(as.Date(data()$dataset1$Days, origin="1970-01-01")==input$rdates_Global[1]),integer(0)), yes = which(as.Date(data()$dataset1$Days, origin="1970-01-01")==(as.Date(input$rdates_Global[1]+1))), no = which(as.Date(data()$dataset1$Days, origin="1970-01-01")==input$rdates_Global[1])) 
       UL=ifelse(identical(which(as.Date(data()$dataset1$Days, origin="1970-01-01")==input$rdates_Global[2]),integer(0)), yes = which(as.Date(data()$dataset1$Days, origin="1970-01-01")==(as.Date(input$rdates_Global[2]-1))), no = which(as.Date(data()$dataset1$Days, origin="1970-01-01")==input$rdates_Global[2])) 
       evirlap(Index1 = data()$dataset1[LL:UL,], Index2 = data()$dataset2[LL:UL,],size.index = input$sizeindex,
-              Index1.lab = "EVI", Index2.lab = "cEVI", Index3.lab = "cEVI-", ln = ifelse(test=input$rlog, T , F), Index.country = "HPAI", type = ifelse(test = input$rlines,"l","p"))
+              Index1.lab = "EVI", Index2.lab = "cEVI", Index3.lab = "cEVI-", ln = ifelse(test=input$rlog, T , F), Index.country = "HPAI", type = ifelse(test = rlines,"l","p"))
       
     })
   
@@ -241,9 +253,18 @@ server <- function(input, output) {
   
   
   output$EVI_cEVI <- DT::renderDataTable({
-    
-    if(input$evi_cevi==TRUE) {out<-data()$dataset1}
-    if(input$evi_cevi==FALSE) {out<-data()$dataset2;names(out)[2]<-"cEVI"}
+    if(input$evi_cevi==TRUE) {
+      out<-round(data()$dataset1[,1:4],3)
+      out$Date<-as.Date(out$Days,"1970-01-01")
+      out<-out[c(5,2,3,4)]
+      names(out)[2:3]<-c("cEVI","Outbreaks")
+    }
+    if(input$evi_cevi==FALSE) {
+      out<-round(data()$dataset2[,1:4],3)
+      out$Date<-as.Date(out$Days,"1970-01-01")
+      out<-out[c(5,2,3,4)]
+    names(out)[2:3]<-c("cEVI","Outbreaks")
+    }
     #out<-EVI_Global
     datatable(
       out,
