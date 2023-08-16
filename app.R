@@ -12,10 +12,11 @@ library(DT)
 library(ggplot2)
 library(shinyWidgets)
 
-
-#load("EVI_Global")
-#load("cEVI_Global")
-#load("cEVI_Africa")
+# To check app locally - KP
+# load("EVI_Global");load("EVI_Europe")
+# load("EVI_Asia_Pacific");load("EVI_America");load("EVI_Africa")
+# load("cEVI_Global");load("cEVI_Europe")
+# load("cEVI_Asia_Pacific");load("cEVI_America");load("cEVI_Africa")
 
 ui <- dashboardPage(
   
@@ -34,7 +35,6 @@ ui <- dashboardPage(
     width = 470,
     div(class = "inlay", style = "height:15px;width:100%;background-color: #ecf0f5;"),
     
-    sidebarUserPanel("Version 1.0"),
     tabsetPanel(
       tabPanel(
         "Home",
@@ -85,19 +85,19 @@ ui <- dashboardPage(
       "Ackws",
       icon = icon("user"),
     h4("References"),
-    helpText(tags$b(""), "Kostoulas, P., Meletis, E., Pateras, K. et al. The epidemic volatility index, a novel early warning tool for identifying new waves in an epidemic. Sci Rep 11, 23775 (2021)",
+    helpText(tags$b(""), "Kostoulas P, Meletis E, Pateras K et al. The epidemic volatility index, a novel early warning tool for identifying new waves in an epidemic. Sci Rep 11, 23775 (2021)",
              tags$a(
                href = "https://www.nature.com/articles/s41598-021-02622-3",
                "Read it here"
              )
     ),
-    helpText(tags$b(""), "Meletis E. et al. EVI R-package: Epidemic Volatility Index as an Early-Warning Tool",
+    helpText(tags$b(""), "Meletis E, Pateras K, Eusebi P et al. EVI R-package: Epidemic Volatility Index as an Early-Warning Tool",
              tags$a(
                href = "https://cran.r-project.org/web/packages/EVI/EVI.pdf",
                "R-package Info"
              )
     ),
-    helpText(tags$b(""), "Pateras K., Meletis et al. The convergence epidemic index (cEVI) an early warning tool for identifying waves in an epidemic.",
+    helpText(tags$b(""), "Pateras K, Meletis E, Denwood M, et al. The convergence epidemic index (cEVI) an early warning tool for identifying waves in an epidemic.",
              tags$a(
                href = "https://www.sciencedirect.com/science/article/pii/S2468042723000349",
                "Read it here"
@@ -107,21 +107,22 @@ ui <- dashboardPage(
     tabPanel(
       "Info",
       icon = icon("info"),
-      h4("Figures Explained [Fix fonts and make readable]"),
-      h6("Observations (updated daily), Logarithmic scale(unselected), presented on the original scale, with red dots corresponding to dates that, according to EVI, an early warning was issued."),
-      h6("Observations (updated daily), Logarithmic scale(selected), presented on the logarithmic scale, which facilitates the comparison of the steepness of the epidemic curve between the different waves."),
+      h4("Version 1.0", style = "margin-left: 45mm;"),
+      h4("Figures Explained [Fix fonts and make readable]", style = "margin-left: 1mm;"),
+      h6("Observations (updated daily), Logarithmic scale(unselected), presented on the original scale, with red dots corresponding to dates that, according to EVI, an early warning was issued.", style = "color: gray; margin-left: 1mm;"),
+      h6("Observations (updated daily), Logarithmic scale(selected), presented on the logarithmic scale, which facilitates the comparison of the steepness of the epidemic curve between the different waves.", style = "color: gray; margin-left: 1mm;"),
       hr(),
-      h4("Table variables explained"),
-      h6("Days: The serial number for each time point."),
-      h6("EVI/cEVI: The estimated EVI/cEVI for each time point, cEVI takes values 0/1."),
-      h6("Outbreaks: The rolling average of the newly observed Outbreaks for each time point. A 7-day rolling average is calculated by default (i.e., r_a=7). The user will be given the option to change this [~Next update~]"),
-      h6("Index: Takes values 1 or 0 for the issuance of an early warning or not, respectively"),
+      h4("Table variables explained", style = "margin-left: 1mm;"),
+      h6("Days: The serial number for each time point.", style = "color: gray; margin-left: 1mm;"),
+      h6("EVI/cEVI: The estimated EVI/cEVI for each time point, cEVI takes values 0/1.", style = "color: gray; margin-left: 1mm;"),
+      h6("Outbreaks: The rolling average of the newly observed Outbreaks for each time point. A 7-day rolling average is calculated by default (i.e., r_a=7). The user will be given the option to change this [~Next update~]", style = "color: gray; margin-left: 1mm;"),
+      h6("Index: Takes values 1 or 0 for the issuance of an early warning or not, respectively", style = "color: gray; margin-left: 1mm;"),
       hr(),
-      h5("Model Predictive value [~Next update~]"),
-      h6("Positive predictive value (PPV) for the days that an early warning was issued. Higher color intensity corresponds to PPV closer to the value of 1."),
-      h6("Negative predictive values (NPV) for the days that an early warning was not issued. Higher color intensity corresponds to NPV closer to the value of 1."),
-      h6("lag_max:  Restriction of the maximum window size for the rolling window size. The default is set to one month (lag_max=30) to prevent excess volatility of past epidemic waves from affecting the most recent volatility estimates.  The user could be given the option to change this [~Next update~]"),
-      h6("past: Restriction on the historical data that EVI/cEVI will use. This is set to 365 (default) to account for a year and aid running times. The user could be given the option to change this [~Next update~]")
+      h5("[~Next update~]", style = "margin-left: 1mm;"),
+      h6("Model Predictive value : Positive predictive value (PPV) for the days that an early warning was issued. Higher color intensity corresponds to PPV closer to the value of 1.", style = "color: gray; margin-left: 1mm;"),
+      h6("Model Predictive value : Negative predictive values (NPV) for the days that an early warning was not issued. Higher color intensity corresponds to NPV closer to the value of 1.", style = "color: gray; margin-left: 1mm;"),
+      h6("lag_max:  Restriction of the maximum window size for the rolling window size. The default is set to one month (lag_max=30) to prevent excess volatility of past epidemic waves from affecting the most recent volatility estimates.  The user could be given the option to change this [~Next update~]", style = "color: gray; margin-left: 1mm;"),
+      h6("past: Restriction on the historical data that EVI/cEVI will use. This is set to 365 (default) to account for a year and aid running times. The user could be given the option to change this [~Next update~]", style = "color: gray; margin-left: 1mm;")
     )
   )#,
   #selectInput("region", "Choose a Region:", choices = c("Global", "America", "Africa", "Asia - Pacific", "Europe"), selected = "Global")
@@ -187,7 +188,7 @@ server <- function(input, output) {
           #scale_color_manual(values=c("grey69", "yellow3", "orange3", "red4")),
           scale_colour_grey(start = 1,end = 0),
           scale_color_manual(values=c("grey69", "yellow3", "orange3", "red4")),
-          labs(title = paste0("HPAI- (c)EVI"), y = "Outbreaks", x="Days"),
+          labs(title = paste0("HPAI- (c)EVI - ",input$region), y = "Outbreaks", x="Days"),
           #          labs(title = paste0("Graph combining outputs ",Index1.lab,", ", Index2.lab," and ", Index3.lab," - ",Index.country), y = "Outbreaks", x="Days"),
           theme(legend.position = "bottom",
                 legend.title = element_blank(),
@@ -204,7 +205,7 @@ server <- function(input, output) {
           #scale_color_manual(values=c("grey69", "yellow3", "orange3", "red4")),
           scale_colour_grey(start = 1,end = 0),
           scale_color_manual(values=c("grey69", "yellow3", "orange3", "red4")),
-          labs(title = paste0("HPAI- (c)EVI"), y = "Outbreaks", x="Days"),
+          labs(title = paste0("HPAI- (c)EVI - ",input$region), y = "Outbreaks", x="Days"),
           #          labs(title = paste0("Graph combining outputs ",Index1.lab,", ", Index2.lab," and ", Index3.lab," - ",Index.country), y = "log(Outbreaks)", x="Days"),
           theme(legend.position = "bottom",
                 legend.title = element_blank(),
